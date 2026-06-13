@@ -1,0 +1,11 @@
+{
+  "name": "Closet Inteligente da Lay",
+  "description": "Guarda-roupa virtual inteligente para montar looks reais, testar compras e usar melhor o que você já tem.",
+  "version": "0.1.0",
+  "author": "Lay",
+  "projectType": "MVP",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
