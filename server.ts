@@ -234,7 +234,7 @@ app.post("/api/analyze-image", requireAuth, aiRateLimiter, validateBody(analyzeI
     category = "calça";
     name = "Calça de Alfaiataria Reta";
     mainColor = "Azul-marinho";
-    fabric = "Alfaitaria leve";
+    fabric = "Alfaiataria leve";
     fit = "Corte reto cintura alta";
     layVerdict = "Essa calça é surreal de elegante! A cor azul-marinho funciona como um neutro perfeito, saindo do óbvio do preto. Rende looks de trabalho até passeios de domingo. Chique, viu? 🤎 Um beeeeijo da Lay 💋";
     styleTags = ["Elegante", "Clássico"];
@@ -320,10 +320,54 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     };
   }
 
+  // Common colors list
+  const colorsList = [
+    { key: "bege", name: "Bege" },
+    { key: "preto", name: "Preto" },
+    { key: "preta", name: "Preto" },
+    { key: "branco", name: "Branco" },
+    { key: "branca", name: "Branco" },
+    { key: "azul", name: "Azul" },
+    { key: "vermelho", name: "Vermelho" },
+    { key: "vermelha", name: "Vermelho" },
+    { key: "verde", name: "Verde" },
+    { key: "amarelo", name: "Amarelo" },
+    { key: "amarela", name: "Amarelo" },
+    { key: "cinza", name: "Cinza" },
+    { key: "rosa", name: "Rosa" },
+    { key: "marrom", name: "Marrom" },
+    { key: "off-white", name: "Off-white" },
+    { key: "offwhite", name: "Off-white" },
+    { key: "creme", name: "Creme" },
+    { key: "nude", name: "Nude" },
+    { key: "caramelo", name: "Caramelo" },
+    { key: "vinho", name: "Vinho" },
+    { key: "berinjela", name: "Berinjela" },
+    { key: "mostarda", name: "Mostarda" },
+    { key: "marinho", name: "Azul-marinho" },
+    { key: "pink", name: "Pink" },
+    { key: "roxo", name: "Roxo" },
+    { key: "roxa", name: "Roxo" },
+    { key: "lilas", name: "Lilás" },
+    { key: "lilás", name: "Lilás" },
+    { key: "terra", name: "Terra" },
+    { key: "areia", name: "Areia" },
+    { key: "caqui", name: "Caqui" },
+    { key: "chumbo", name: "Chumbo" }
+  ];
+
+  let detectedColor: string | null = null;
+  for (const c of colorsList) {
+    if (nameLower.includes(c.key)) {
+      detectedColor = c.name;
+      break;
+    }
+  }
+
   // Infer based on keywords
   let category = "blusa";
-  let name = "Camiseta Básica de Algodão";
-  let mainColor = "Branca";
+  let mainColor = detectedColor || "Branca";
+  let name = `Camiseta Básica ${mainColor}`;
   let subcategory = "camiseta básica";
   let pattern = "Liso";
   let fabric = "Algodão leve";
@@ -336,8 +380,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
 
   if (nameLower.includes("blazer")) {
     category = "blazer";
-    name = "Blazer Alongado Monocromático";
-    mainColor = "Berinjela";
+    mainColor = detectedColor || "Berinjela";
+    name = `Blazer Alongado ${mainColor}`;
     subcategory = "blazer alfaiataria alongado";
     pattern = "Liso";
     fabric = "Crepe alfaiataria";
@@ -349,8 +393,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 8;
   } else if (nameLower.includes("camisa")) {
     category = "camisa";
-    name = "Camisa de Linho Curinga";
-    mainColor = "Areia";
+    mainColor = detectedColor || "Areia";
+    name = `Camisa ${mainColor} Curinga`;
     subcategory = "camisa de linho over";
     pattern = "Liso";
     fabric = "Linho";
@@ -362,8 +406,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 5;
   } else if (nameLower.includes("calça") || nameLower.includes("calca")) {
     category = "calça";
-    name = "Calça Alfaiataria Reta Modern";
-    mainColor = "Terra";
+    mainColor = detectedColor || "Terra";
+    name = `Calça Alfaiataria Reta ${mainColor}`;
     subcategory = "calça de alfaiataria reta";
     pattern = "Liso";
     fabric = "Crepe estruturado";
@@ -375,8 +419,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 6;
   } else if (nameLower.includes("saia")) {
     category = "saia";
-    name = "Saia Midi Plissada Elegância";
-    mainColor = "Preto";
+    mainColor = detectedColor || "Preto";
+    name = `Saia Midi Plissada ${mainColor}`;
     subcategory = "saia plissada midi";
     pattern = "Prega";
     fabric = "Poliéster fluido";
@@ -388,10 +432,10 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 5;
   } else if (nameLower.includes("vestido")) {
     category = "vestido";
-    name = "Vestido Envelope Floral Delicate";
-    mainColor = "Azul-marinho";
+    mainColor = detectedColor || "Azul-marinho";
+    name = `Vestido Envelope ${mainColor}`;
     subcategory = "vestido midi envelope";
-    pattern = "Floral delicado";
+    pattern = "Liso";
     fabric = "Viscose crepe";
     fit = "Envelope transpassado";
     occasions = ["Passeio", "Almoço de família", "Aniversário"];
@@ -401,8 +445,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 4;
   } else if (nameLower.includes("bolsa")) {
     category = "bolsa";
-    name = "Bolsa Baú de Couro Sustentável";
-    mainColor = "Caramelo";
+    mainColor = detectedColor || "Caramelo";
+    name = `Bolsa Estruturada ${mainColor}`;
     subcategory = "bolsa de mão estruturada";
     pattern = "Couro liso";
     fabric = "Sintético Premium";
@@ -414,8 +458,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 6;
   } else if (nameLower.includes("sapato") || nameLower.includes("sandalia") || nameLower.includes("sandália") || nameLower.includes("slipper")) {
     category = "sandália";
-    name = "Sandália de Salto Médio Conforto";
-    mainColor = "Metalizado ouro light";
+    mainColor = detectedColor || "Metalizado ouro light";
+    name = `Sandália Salto Bloco ${mainColor}`;
     subcategory = "sandália bico quadrado salto bloco";
     pattern = "Liso";
     fabric = "Sintético metalizado de alta qualidade";
@@ -427,8 +471,8 @@ function fallbackAnalyzeCandidateImage(fileName: string): any {
     formalityLevel = 6;
   } else if (nameLower.includes("jeans")) {
     category = "jeans";
-    name = "Calça Jeans Reta Clássica";
-    mainColor = "Azul escuro";
+    mainColor = detectedColor || "Azul escuro";
+    name = `Calça Jeans ${mainColor}`;
     subcategory = "jeans reto amaciado";
     pattern = "Liso";
     fabric = "Jeans premium";
